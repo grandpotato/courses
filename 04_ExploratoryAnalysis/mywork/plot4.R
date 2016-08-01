@@ -1,0 +1,15 @@
+#This script produces 4 graphs showing various data from the UC Irvine Machine Learning Repository
+hpc <- read.table(file = "household_power_consumption.txt",header=TRUE,sep= ";",colClasses = c("character","character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"), na.strings = "?")
+hpc <- cbind(DateTime = as.POSIXct(paste(hpc$Date,hpc$Time),format="%d/%m/%Y %H:%M:%S", "GMT"),hpc)
+febdata <- subset(hpc, as.Date(DateTime) == as.Date("2007-02-01",tz = "GMT")|as.Date(DateTime) == as.Date("2007-02-02",tz = "GMT"))
+
+png(filename = "plot4.png", width = 480,height = 480,units="px")
+par(mfrow=c(2,2))
+plot(febdata$DateTime,febdata$Global_active_power, type = "l",xlab="",ylab="Global Active Power (kilowatts)")
+plot(febdata$DateTime,febdata$Voltage, type = "l",xlab="datetime",ylab="Voltage")
+plot(febdata$DateTime,febdata$Sub_metering_1, type = "l",xlab="",ylab="Global Active Power (kilowatts)")
+points(febdata$DateTime,febdata$Sub_metering_2, type = "l",col="red")
+points(febdata$DateTime,febdata$Sub_metering_3, type = "l",col="blue")
+legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"), lty = c(1,1,1),col = c("black", "red", "blue"),bty="n")
+plot(febdata$DateTime,febdata$Global_reactive_power, type = "l",xlab="datetime",ylab="Global_reactive_power")
+dev.off()
